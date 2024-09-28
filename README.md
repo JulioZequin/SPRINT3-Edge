@@ -1,7 +1,7 @@
 
   <h1>Projeto IoT: Simulação de Acelerador com Arduino</h1>
 
-  <h2>Integrantes<h2>
+  <h2>Integrantes</h2>
   <ul>
         <li>Isadora de Morais Meneghetti (RM: 556326)</li>
         <li>Júlio César Ruiz Zequin (RM: 554676)</li>
@@ -26,6 +26,7 @@
 
    <h3>Draft da Arquitetura</h3>
     <pre>
+       <code>
     +-------------------+
     |    IoT Devices    |
     |   (Arduino + Pot) |
@@ -44,6 +45,7 @@
     |     Front-end     |
     |  (Dashboards e Gráficos) |
     +-------------------+
+       </code>
     </pre>
 
   <h2>Recursos Necessários</h2>
@@ -80,58 +82,60 @@
   <h2>Código Desenvolvido</h2>
     <h3>Código do Arduino</h3>
     <pre>
-      
+    <code>
 #include <ArduinoJson.h>
-  // Definição dos pinos
-    const int potPin = A0; // Pino do potenciômetro (acelerador)
 
-  // Variáveis
-    int valorPot = 0; // Valor do potenciômetro
-    int velocidade = 0; // Velocidade simulada
-    float nivelBateria = 100.0; // Percentual de carga da bateria
-    float correnteMaxima = 400.0; // Corrente máxima em amperes
+// Definição dos pinos
+const int potPin = A0; // Pino do potenciômetro (acelerador)
 
-  void setup() {
-      Serial.begin(9600); // Inicia comunicação serial
-    }
+// Variáveis
+int valorPot = 0; // Valor do potenciômetro
+int velocidade = 0; // Velocidade simulada
+float nivelBateria = 100.0; // Percentual de carga da bateria
+float correnteMaxima = 400.0; // Corrente máxima em amperes
 
-  void loop() {
-      StaticJsonDocument<100> json;
+void setup() {
+    Serial.begin(9600); // Inicia comunicação serial
+}
+
+void loop() {
+    StaticJsonDocument<100> json;
 
   // Lê o valor do potenciômetro (0 a 1023)
-      valorPot = analogRead(potPin);
+    valorPot = analogRead(potPin);
 
-   // Verifica se a leitura está correta
-      if (valorPot < 0 || valorPot > 1023) {
+  // Verifica se a leitura está correta
+    if (valorPot < 0 || valorPot > 1023) {
         Serial.println("Erro na leitura do potenciômetro!");
-      } else {
+    } else {
         // Calcula a velocidade com base no valor do potenciômetro
         velocidade = map(valorPot, 0, 1023, 0, 320); // Simula velocidade de 0 a 320 km/h
 
   // Simula o consumo de corrente diretamente
-        float corrente = (velocidade / 320.0) * correnteMaxima;
+  float corrente = (velocidade / 320.0) * correnteMaxima;
 
   // Reduz a bateria (ajuste conforme necessário)
-        nivelBateria -= (corrente / 500.0); // Ajuste conforme a duração de cada ciclo
+  nivelBateria -= (corrente / 500.0); // Ajuste conforme a duração de cada ciclo
 
-   // Evita que a carga da bateria vá abaixo de 0
-        if (nivelBateria < 0) {
-          nivelBateria = 0;
-        }
+  // Evita que a carga da bateria vá abaixo de 0
+  if (nivelBateria < 0) {
+      nivelBateria = 0;
+  }
 
   // Formato de escrita JSON
-        json["velocidade"] = velocidade;
-        json["consumoCorrente"] = corrente;
-        json["bateria"] = nivelBateria;
+  json["velocidade"] = velocidade;
+  json["consumoCorrente"] = corrente;
+  json["bateria"] = nivelBateria;
 
-   serializeJson(json, Serial);
-    Serial.println();
-      }
+  serializeJson(json, Serial);
+  Serial.println();
+  }
 
   // Aguarda um segundo antes do próximo ciclo
-      delay(1000);
-    }
-    </pre>
+  delay(1000);
+}
+    </code>
+</pre>
     
   <h3>Configuração do Node-RED</h3>
     <p>Utilize nós para configurar a leitura da porta serial e visualização dos dados JSON.</p>
