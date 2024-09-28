@@ -45,7 +45,7 @@ void loop() {
     }
 
     // Simulação da temperatura (0 a 90°C) baseada no valor do potenciômetro
-    temperatura = map(valorPot, 0, 1023, 0, 90); // Temperatura de 0 a 90°C
+    temperatura = map(valorPot, 0, 1023, 25, 90); // Temperatura de 25 °C a 90°C
 
     // Formato de escrita JSON
     json["velocidade"] = velocidade;
