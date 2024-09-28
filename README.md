@@ -81,10 +81,10 @@
 
   <h2>Código Desenvolvido</h2>
     <h3>Código do Arduino</h3>
-    <pre>
-    <code>
-#include <ArduinoJson.h>
+      <pre>
+        <code>
 
+#include <ArduinoJson.h>
 // Definição dos pinos
 const int potPin = A0; // Pino do potenciômetro (acelerador)
 
@@ -134,8 +134,8 @@ void loop() {
   // Aguarda um segundo antes do próximo ciclo
   delay(1000);
 }
-    </code>
-</pre>
+        </code>
+      </pre>
     
   <h3>Configuração do Node-RED</h3>
     <p>Utilize nós para configurar a leitura da porta serial e visualização dos dados JSON.</p>
